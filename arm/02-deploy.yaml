@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodered
+  namespace: nodered
+  labels:
+    app: nodered
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodered
+  template:
+    metadata:
+      labels:
+        app: nodered
+    spec:
+      nodeSelector:
+        beta.kubernetes.io/arch: arm64
+      volumes:
+        - name: nodered-data
+          persistentVolumeClaim:
+            claimName: nodered-data
+      containers:
+      - name: nodered
+        image: nodered/node-red:1.3.4
+        volumeMounts:
+          - name: nodered-data 
+            mountPath: /data
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 1880
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+        ports:
+        - containerPort: 1880

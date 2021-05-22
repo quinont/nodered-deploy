@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nodered
+  namespace: nodered
+spec:
+  rules:
+  - host: nodered.internal.local.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nodered
+          servicePort: 1880
